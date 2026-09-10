@@ -40,7 +40,19 @@ All automated test files live beside the implementation file they exercise (`*_t
 - Create: `internal/model/model_test.go`
 - Create: `cmd/badge-generator/main.go`
 
-- [ ] **Step 1: Write the failing model-contract test.**
+- [x] **Bootstrap: Create the Go module configuration.**
+
+Create only `go.mod` before the first test:
+
+```text
+module badges
+
+go 1.22
+```
+
+This is build configuration, not production behavior; it lets the deliberately failing test resolve the intended package path.
+
+- [x] **Step 1: Write the failing model-contract test.**
 
 ```go
 func TestDiagnosticErrorIncludesStageAndSource(t *testing.T) {
@@ -52,12 +64,12 @@ func TestDiagnosticErrorIncludesStageAndSource(t *testing.T) {
 }
 ```
 
-- [ ] **Step 2: Run the test to establish the red state.**
+- [x] **Step 2: Run the test to establish the red state.**
 
 Run: `go test ./internal/model -run TestDiagnosticErrorIncludesStageAndSource -v`  
 Expected: FAIL because package `badges/internal/model` is absent.
 
-- [ ] **Step 3: Add the smallest stable domain model.**
+- [x] **Step 3: Add the smallest stable domain model.**
 
 Create `go.mod` with `module badges` and `go 1.22`. Create `internal/model/model.go` with the following exported API; do not put parsing logic in this package.
 
@@ -74,12 +86,12 @@ type Diagnostic struct { Severity Severity; Stage, Source, Code, Message string 
 func (d Diagnostic) String() string { return string(d.Severity)+" ["+d.Stage+"] "+d.Source+": "+d.Message }
 ```
 
-- [ ] **Step 4: Re-run the package test.**
+- [x] **Step 4: Re-run the package test.**
 
 Run: `go test ./internal/model -v`  
 Expected: PASS with one test.
 
-- [ ] **Step 5: Create a compiling command entry point and commit.**
+- [x] **Step 5: Create a compiling command entry point and commit.**
 
 Create `cmd/badge-generator/main.go`:
 
