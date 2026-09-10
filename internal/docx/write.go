@@ -38,7 +38,7 @@ func document(p []model.Person) string {
 		if end > len(p) {
 			end = len(p)
 		}
-		b.WriteString(`<w:tbl><w:tblPr><w:tblW w:w="10204" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblBorders><w:top w:val="single" w:sz="4"/><w:left w:val="single" w:sz="4"/><w:bottom w:val="single" w:sz="4"/><w:right w:val="single" w:sz="4"/><w:insideH w:val="single" w:sz="4"/><w:insideV w:val="single" w:sz="4"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="5102"/><w:gridCol w:w="5102"/></w:tblGrid>`)
+		b.WriteString(`<w:tbl><w:tblPr><w:tblW w:w="10204" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblCellMar><w:top w:w="100" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar><w:tblBorders><w:top w:val="single" w:sz="4"/><w:left w:val="single" w:sz="4"/><w:bottom w:val="single" w:sz="4"/><w:right w:val="single" w:sz="4"/><w:insideH w:val="single" w:sz="4"/><w:insideV w:val="single" w:sz="4"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="5102"/><w:gridCol w:w="5102"/></w:tblGrid>`)
 		for r := 0; r < 5; r++ {
 			b.WriteString(`<w:tr><w:trPr><w:trHeight w:val="3118" w:hRule="exact"/></w:trPr>`)
 			for c := 0; c < 2; c++ {
