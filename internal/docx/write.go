@@ -39,11 +39,19 @@ func document(p []model.Person) string {
 			end = len(p)
 		}
 		b.WriteString(`<w:tbl><w:tblPr><w:tblW w:w="10204" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblCellMar><w:top w:w="100" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar><w:tblBorders><w:top w:val="single" w:sz="4"/><w:left w:val="single" w:sz="4"/><w:bottom w:val="single" w:sz="4"/><w:right w:val="single" w:sz="4"/><w:insideH w:val="single" w:sz="4"/><w:insideV w:val="single" w:sz="4"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="5102"/><w:gridCol w:w="5102"/></w:tblGrid>`)
-		for r := 0; r < 5; r++ {
+		rows := 5
+		if end-start < 10 {
+			rows = (end - start + 1) / 2
+		}
+		for r := 0; r < rows; r++ {
 			b.WriteString(`<w:tr><w:trPr><w:trHeight w:val="3118" w:hRule="exact"/></w:trPr>`)
 			for c := 0; c < 2; c++ {
 				i := start + r*2 + c
-				b.WriteString(`<w:tc><w:tcPr><w:tcW w:w="5102" w:type="dxa"/></w:tcPr>`)
+				b.WriteString(`<w:tc><w:tcPr><w:tcW w:w="5102" w:type="dxa"/>`)
+				if i >= end {
+					b.WriteString(`<w:tcBorders><w:top w:val="nil"/><w:left w:val="nil"/><w:bottom w:val="nil"/><w:right w:val="nil"/></w:tcBorders>`)
+				}
+				b.WriteString(`</w:tcPr>`)
 				if i < end {
 					b.WriteString(card(p[i]))
 				} else {
