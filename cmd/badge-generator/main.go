@@ -16,7 +16,12 @@ import (
 )
 
 func main() {
-	root, _ := os.Getwd()
+	root, err := os.Executable()
+	if err == nil {
+		root = filepath.Dir(root)
+	} else {
+		root, _ = os.Getwd()
+	}
 	in, out := filepath.Join(root, "input"), filepath.Join(root, "output")
 	_ = os.MkdirAll(in, 0755)
 	_ = os.MkdirAll(out, 0755)
