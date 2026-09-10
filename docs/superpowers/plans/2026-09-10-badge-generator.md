@@ -115,7 +115,7 @@ Commit: `git add go.mod cmd/badge-generator internal/model && git commit -m "cho
 - Create: `internal/aggregate/aggregate.go`
 - Create: `internal/aggregate/aggregate_test.go`
 
-- [ ] **Step 1: Write failing normalization and aggregation tests.**
+- [x] **Step 1: Write failing normalization and aggregation tests.**
 
 ```go
 func TestCanonicalNameTreatsYoAndSpacingAsDuplicate(t *testing.T) {
@@ -135,12 +135,12 @@ func TestAggregateMakesOnePersonWithMappedRolesAndSpecialties(t *testing.T) {
 }
 ```
 
-- [ ] **Step 2: Run both tests to establish the red state.**
+- [x] **Step 2: Run both tests to establish the red state.**
 
 Run: `go test ./internal/normalize ./internal/aggregate -v`  
 Expected: FAIL because packages and functions are absent.
 
-- [ ] **Step 3: Implement deterministic text and role functions.**
+- [x] **Step 3: Implement deterministic text and role functions.**
 
 Implement `normalize.VisibleText`, `normalize.CollapseSpace`, and `normalize.CanonicalName`. `CanonicalName` must trim, collapse Unicode whitespace, uppercase with `strings.ToUpper`, and replace `Ё` by `Е` only in the key. Implement `aggregate.MapRole(raw string) (string, bool)` with these exact mappings:
 
@@ -153,12 +153,12 @@ Implement `normalize.VisibleText`, `normalize.CollapseSpace`, and `normalize.Can
 
 Strip the first quoted specialty fragment and trailing organization tokens only when determining the role. Preserve the original first-seen spelling of FIO and preserve first-seen order of unique roles and specialties. Return a warning diagnostic with code `UNKNOWN_ROLE` for an unmapped role; never invent a mapping.
 
-- [ ] **Step 4: Add edge tests and run them.**
+- [x] **Step 4: Add edge tests and run them.**
 
 Add cases for `секретарь АПК`, duplicate role from a second file, blank role, two people with similar FIO, and an unknown status. Run: `go test ./internal/normalize ./internal/aggregate -v`  
 Expected: PASS, including stable first-seen order.
 
-- [ ] **Step 5: Run the full suite and commit.**
+- [x] **Step 5: Run the full suite and commit.**
 
 Run: `go test ./...`  
 Expected: PASS.  
