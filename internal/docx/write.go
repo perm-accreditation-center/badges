@@ -30,6 +30,7 @@ func Write(path string, people []model.Person) error {
 	return nil
 }
 func document(p []model.Person) string {
+	p = expand(p)
 	var b strings.Builder
 	b.WriteString(`<?xml version="1.0"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>`)
 	for start := 0; start < len(p) || start == 0; start += 10 {
@@ -45,6 +46,8 @@ func document(p []model.Person) string {
 				b.WriteString(`<w:tc><w:tcPr><w:tcW w:w="5102" w:type="dxa"/></w:tcPr>`)
 				if i < end {
 					b.WriteString(card(p[i]))
+				} else {
+					b.WriteString(`<w:p/>`)
 				}
 				b.WriteString(`</w:tc>`)
 			}
@@ -54,9 +57,9 @@ func document(p []model.Person) string {
 		if end == len(p) {
 			break
 		}
-		b.WriteString(`<w:p><w:r><w:br w:type="page"/></w:r></w:p>`)
+		b.WriteString(`<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/></w:pPr><w:r><w:rPr><w:sz w:val="2"/></w:rPr><w:t></w:t></w:r></w:p>`)
 	}
-	b.WriteString(`<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="624" w:right="850" w:bottom="624" w:left="850"/></w:sectPr></w:body></w:document>`)
+	b.WriteString(`<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="500" w:right="850" w:bottom="500" w:left="850"/></w:sectPr></w:body></w:document>`)
 	return b.String()
 }
 func card(p model.Person) string {
@@ -67,7 +70,27 @@ func card(p model.Person) string {
 	lines = append(lines, "", p.FullName, "", strings.Join(p.Roles, ", "))
 	var b strings.Builder
 	for _, s := range lines {
-		b.WriteString(fmt.Sprintf(`<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:sz w:val="28"/></w:rPr><w:t>%s</w:t></w:r></w:p>`, html.EscapeString(s)))
+		b.WriteString(fmt.Sprintf(`<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="0" w:line="320" w:lineRule="exact"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:sz w:val="32"/></w:rPr><w:t>%s</w:t></w:r></w:p>`, html.EscapeString(s)))
 	}
 	return b.String()
+}
+
+func expand(people []model.Person) []model.Person {
+	cards := make([]model.Person, 0, len(people))
+	for _, person := range people {
+		specialties := person.Specialties
+		roles := person.Roles
+		if len(specialties) == 0 {
+			specialties = []string{"Специальность не определена"}
+		}
+		if len(roles) == 0 {
+			roles = []string{"Роль не указана"}
+		}
+		for _, specialty := range specialties {
+			for _, role := range roles {
+				cards = append(cards, model.Person{FullName: person.FullName, Specialties: []string{specialty}, Roles: []string{role}})
+			}
+		}
+	}
+	return cards
 }
