@@ -1,5 +1,5 @@
-.cache/
-bin/
-badge-generator.exe
-input/
-output/
+/.cache/
+/bin/
+/badge-generator.exe
+/input/
+/output/
