@@ -1,7 +1,3 @@
 package main
-
-import "fmt"
-
-func main() {
-	fmt.Println("Генератор бейджей аккредитации")
-}
+import("fmt";"os";"path/filepath";"time";"badges/internal/input";"badges/internal/ooxml";"badges/internal/spo";"badges/internal/aggregate";"badges/internal/model";"badges/internal/docx")
+func main(){root,_:=os.Getwd();in:=filepath.Join(root,"input");out:=filepath.Join(root,"output");os.MkdirAll(in,0755);os.MkdirAll(out,0755);fmt.Println("Генератор бейджей — профиль СПО");files,diags:=input.Discover(in);fmt.Printf("[1/5] Найдено файлов: %d\n",len(files));var records []model.Record;for _,f:=range files{d,e:=ooxml.ReadDocument(f);if e!=nil{fmt.Println("Пропущен",filepath.Base(f),e);continue};r,x:=spo.Parse(d,f);records=append(records,r...);diags=append(diags,x...)};people,x:=aggregate.Records(records);diags=append(diags,x...);fmt.Printf("[2/5] Извлечено записей: %d\n[3/5] Уникальных людей: %d\n",len(records),len(people));if len(people)==0{fmt.Println("Нет корректных записей в input.");return};bundle:=filepath.Join(out,time.Now().Format("2006-01-02_150405"));os.MkdirAll(bundle,0755);path:=filepath.Join(bundle,"бейджи.docx");if e:=docx.Write(path,people);e!=nil{fmt.Println("Ошибка создания DOCX:",e);return};fmt.Printf("[4/5] Создан Word: %s\n[5/5] Предупреждений: %d\nПечать: фактический размер / 100%%\n",path,len(diags))}
