@@ -8,7 +8,7 @@ import (
 	"badges/internal/normalize"
 )
 
-var rolePattern = regexp.MustCompile(`(?i)(заместитель\s+председателя|председатель|секретарь|член)\s+АПК`)
+var rolePattern = regexp.MustCompile(`(?i)(заместитель\s+председателя|председатель|секретарь|член)\s*АПК`)
 
 // MapRole maps source statuses to the wording used by the approved badge
 // reference. The second value reports whether a known mapping was used.
@@ -71,10 +71,21 @@ func Records(records []model.Record) ([]model.Person, []model.Diagnostic) {
 			diagnostics = append(diagnostics, diagnostic(record, "MISSING_SPECIALTY", "Специальность не определена"))
 		}
 		addUnique(&person.Specialties, specialty)
+		addAssignment(&person.Assignments, role, specialty, record.Source)
 		person.Sources = append(person.Sources, record.Source)
 	}
 
 	return people, diagnostics
+}
+
+func addAssignment(assignments *[]model.Assignment, role, specialty string, source model.SourceRef) {
+	for i := range *assignments {
+		if (*assignments)[i].Role == role && (*assignments)[i].Specialty == specialty {
+			(*assignments)[i].Sources = append((*assignments)[i].Sources, source)
+			return
+		}
+	}
+	*assignments = append(*assignments, model.Assignment{Role: role, Specialty: specialty, Sources: []model.SourceRef{source}})
 }
 
 func addUnique(values *[]string, value string) {

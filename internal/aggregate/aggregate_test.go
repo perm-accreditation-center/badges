@@ -25,6 +25,12 @@ func TestRecordsAggregateMappedRolesAndSpecialties(t *testing.T) {
 	if len(person.Specialties) != 2 || person.Specialties[0] != "Гистология" || person.Specialties[1] != "Рентгенология" {
 		t.Fatalf("unexpected specialties: %#v", person.Specialties)
 	}
+	if len(person.Assignments) != 2 {
+		t.Fatalf("each role-specialty pair must remain separate, got %#v", person.Assignments)
+	}
+	if person.Assignments[0].Role != "Член подкомиссии" || person.Assignments[0].Specialty != "Гистология" || person.Assignments[1].Role != "Председатель подкомиссии" || person.Assignments[1].Specialty != "Рентгенология" {
+		t.Fatalf("unexpected role-specialty pairs: %#v", person.Assignments)
+	}
 }
 
 func TestRecordsKeepsUnknownRoleAsWarning(t *testing.T) {

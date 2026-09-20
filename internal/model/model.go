@@ -26,11 +26,21 @@ type Record struct {
 	Source    SourceRef
 }
 
+// Assignment is one verified role-specialty pair from a source row.
+// A badge must be made from this pair, never from independently combined
+// lists of roles and specialties.
+type Assignment struct {
+	Role      string
+	Specialty string
+	Sources   []SourceRef
+}
+
 // Person is the aggregated representation printed on one or more badges.
 type Person struct {
 	FullName    string
 	Roles       []string
 	Specialties []string
+	Assignments []Assignment
 	Sources     []SourceRef
 }
 

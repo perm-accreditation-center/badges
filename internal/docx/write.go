@@ -86,6 +86,12 @@ func card(p model.Person) string {
 func expand(people []model.Person) []model.Person {
 	cards := make([]model.Person, 0, len(people))
 	for _, person := range people {
+		if len(person.Assignments) > 0 {
+			for _, assignment := range person.Assignments {
+				cards = append(cards, model.Person{FullName: person.FullName, Specialties: []string{assignment.Specialty}, Roles: []string{assignment.Role}})
+			}
+			continue
+		}
 		specialties := person.Specialties
 		roles := person.Roles
 		if len(specialties) == 0 {
